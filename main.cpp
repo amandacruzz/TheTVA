@@ -3,8 +3,6 @@
 #include <unordered_map>
 #include <vector>
 #include <map>
-#include <string.h>
-#include <sstream>
 using namespace std;
 
 class unOrderedMaps
@@ -13,11 +11,11 @@ public:
     ifstream dataset;
 
     // Map with key = title, value = number of occurrences
-    unordered_map<string, int> Arab;
+    unordered_map<string, int> Saudi;
     unordered_map<string, int> China;
     unordered_map<string, int> UnitedStates;
     // keep counter for number of articles in each country
-    int ArabCount = 0;
+    int SaudiCount = 0;
     int ChinaCount = 0;
     int UnitedStatesCount = 0;
 
@@ -32,11 +30,11 @@ public:
     ifstream dataset;
 
     // Map with key = title, value = number of occurrences
-    map<string, int> Arab;
+    map<string, int> Saudi;
     map<string, int> China;
     map<string, int> UnitedStates;
     // keep counter for number of articles in each country
-    int ArabCount = 0;
+    int SaudiCount = 0;
     int ChinaCount = 0;
     int UnitedStatesCount = 0;
 
@@ -58,8 +56,8 @@ void unOrderedMaps::insertTitle(string countryData)
             i++;
             // cout << "test " << i << ": " << line << endl;
             //FIXME: if(first char == Arab char)
-            // insert into Arab map
-            ArabCount++;
+            // insert into Saudi map
+            SaudiCount++;
             //FIXME: if(first char == Chinese char)
             // insert into China map
             ChinaCount++;
@@ -75,12 +73,12 @@ vector<int> unOrderedMaps::indexCalculator()
 {
     vector<int>prosperityIndex;
 
-    // TODO: count the number of words in vector of Arab
+    // TODO: count the number of words in vector of Saudi
     int totalWords1 = 0;
 //    for (int i = 0; i < titles1.size(); i++){
 //
 //    }
-    prosperityIndex[0] = totalWords1 / ArabCount;
+    prosperityIndex[0] = totalWords1 / SaudiCount;
 
     // TODO: count the number of words in vector of China
     int totalWords2 = 0;
@@ -112,8 +110,8 @@ void orderedMapCalc::getTitleInsert(string countryData) {
             // cout << "test " << i << ": " << line << endl;
 
             //FIXME: if(first char == Arab char)
-            // insert into Arab map
-            ArabCount++;
+            // insert into Saudi map
+            SaudiCount++;
 
             //FIXME: if(first char == Chinese char)
             // insert into China map
@@ -130,12 +128,12 @@ void orderedMapCalc::getTitleInsert(string countryData) {
 vector<int> orderedMapCalc::calculateIndex() {
     vector<int>prosperityIndex;
 
-    // TODO: count the number of words in vector of Arab
+    // TODO: count the number of words in vector of Saudi
     int totalWords1 = 0;
 //   for (int i = 0; i < titles1.size(); i++){
 //
 //   }
-    prosperityIndex[0] = totalWords1 / ArabCount;
+    prosperityIndex[0] = totalWords1 / SaudiCount;
 
     // TODO: count the number of words in vector of China
     int totalWords2 = 0;
@@ -157,8 +155,9 @@ vector<int> orderedMapCalc::calculateIndex() {
 
 int main()
 {
+
     ifstream dataset;
-    string file = "news-week-17aug24.csv";
+    string file = "news-week-18aug24.csv";
     dataset.open(file);
     string input, line;
     int i = 0;
@@ -168,6 +167,7 @@ int main()
         i++;
         cout << "test " << i << ": " << line << endl;
     }
+
 
     unOrderedMaps prosperityCalculator;
     orderedMapCalc prosperityCalc;
@@ -193,7 +193,7 @@ int main()
     idx2 = unorderedIdx[1];
     idx3 = unorderedIdx[2];
     // Display data
-    cout << "The prosperity index of the United States using unordered map is: " << idx1 << endl;
+    cout << "The prosperity index of Saudi using unordered map is: " << idx1 << endl;
     cout << "The prosperity index of the CHANGE country using unordered map is: " << idx2 << endl;
     cout << "The prosperity index of the CHANGE country using unordered map is: " << idx3 << endl;
 
