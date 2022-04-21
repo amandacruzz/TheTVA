@@ -1,10 +1,10 @@
 #include <iostream>
 #include <fstream>
-#include <string.h>
 #include <sstream>
 #include <map>
 #include <vector>
 #include <unordered_map>
+#include <ctime>
 using namespace std;
 
 class unorderedMapCalc
@@ -43,7 +43,6 @@ public:
     int EUNACount = 0;
 
     // Methods
-    void getTitleInsert(string line);
     void insertTitle(string articleTitle, string region, map<string, int> &asia, map<string, int> &ME, map<string, int> &EUNA);
     vector<double> calculateIndex();
 };
@@ -91,32 +90,6 @@ vector<double> unorderedMapCalc::indexCalculator()
     return prosperityIndex;
 }
 
-// method to parse title and insert into map
-void orderedMapCalc::getTitleInsert(string countryData) {
-
-//    if (countryData == "news-week-17aug24.csv") {
-//        dataset.open(countryData);
-//        string input, line;int i = 0;
-//        getline(dataset, line);
-//        // cout << "test " << i << ": " << line << endl;
-//        while (getline(dataset, line)) {
-//            i++;
-//            // cout << "test " << i << ": " << line << endl;
-//
-//            //FIXME: if(first char == Arab char)
-//            // insert into Saudi map
-//            MidEWordCnt++;
-//
-//            //FIXME: if(first char == Chinese char)
-//            // insert into Asia map
-//            AsiaWordCount++;
-//
-//            //FIXME: if(first char == US char)
-//            // insert US map
-//            EUNAWordCount++;
-//        }
-//    }
-}
 
 // method to calculate prosperity index: add up words of first 100,000 articles and divide it by 100,000
 vector<double> orderedMapCalc::calculateIndex() {
@@ -150,7 +123,7 @@ void orderedMapCalc::insertTitle(string articleTitle, string region, map<string,
         AsiaWordCount += articleTitle.length();
         AsiaCount++;
     }
-    else{
+    else if(region == "NA"){
         mapCount = EUNA.size();
         EUNA.insert(pair<string, int> (articleTitle, 1));
         if(EUNA.size() == mapCount)
@@ -191,6 +164,7 @@ string findRegion(string url){
 }
 
 int main() {
+    clock_t timer;
 
     // UNORDERED MAPS: Parse data and insert into map for each key
     unorderedMapCalc prospCalcUnord;
@@ -229,24 +203,76 @@ int main() {
     idx1 = unorderedIdx[0];
     idx2 = unorderedIdx[1];
     idx3 = unorderedIdx[2];
-    cout << "1: " << idx1 << endl << "2: " << idx2 << endl << "3: " << idx3 << endl;
-//     Display data
-    cout << "The prosperity index of the Middle East using an unordered map is: " << idx1 << endl;
-    cout << "The prosperity index of the Asia country using an unordered map is: " << idx2 << endl;
-    cout << "The prosperity index of Western countries using an unordered map is: " << idx3 << endl;
-
-    // ORDERED MAP: Calculate the prosperity index of three countries
-    vector<double> index;
-    index = prospCalcOrd.calculateIndex();
-    double index1, index2, index3;
-    index1 = index[0];
-    index2 = index[1];
-    index3 = index[2];
-    // Display data
+    string lastTitleNA;
+    string lastTitleAsia;
+    string lastTitleME;
+    for(auto iter = prospCalcOrd.EUNA.begin(); iter != prospCalcOrd.EUNA.end(); iter++){
+        lastTitleNA = iter->first;
+    }
+    for(auto iter = prospCalcOrd.Asia.begin(); iter != prospCalcOrd.Asia.end(); iter++){
+        lastTitleAsia = iter->first;
+    }
+    for(auto iter = prospCalcOrd.MidEast.begin(); iter != prospCalcOrd.MidEast.end(); iter++){
+        lastTitleME = iter->first;
+    }
+    string input;
+    cout << "Welcome to the Prosperity Indexer!" << endl << endl;
+    cout << "Prosperity Index Rule of Thumb:" << endl;
+    cout << "PI < 70: This region is experiencing an era of prosperity." << endl;
+    cout << "70 < PI < 80: This region is fairly prosperous." << endl;
+    cout << "PI > 80: This region is facing an era of development." << endl;
     cout << "--------------------------------------------------" << endl;
-    cout << "The prosperity index of the Middle East using an ordered map is: " << index1 << endl;
-    cout << "The prosperity index of the Asia using an ordered map is: " << index2 << endl;
-    cout << "The prosperity index of Western countries using an ordered map is: " << index3 << endl;
+    cout << "To find the prosperity index of a region, enter:" << endl;
+    cout << "1: Europe, North America, & South America" << endl;
+    cout << "2: Middle East" << endl;
+    cout << "3: Asia" << endl;
+    cout << "4: exit" << endl;
+
+    bool findProsperity = true;
+    int test;
+    while(findProsperity) {
+        cin >> input;
+        if (input == "1") {
+            cout << "The prosperity index of Western civilizations is: " << idx3 << endl;
+            timer = clock();
+            test = prospCalcUnord.EUNA[lastTitleNA];
+            timer = clock() - timer;
+            cout << "It took an unordered map " << (float)timer/CLOCKS_PER_SEC << " seconds to access its last inputted key!" << endl;
+            timer = clock();
+            test = prospCalcOrd.EUNA[lastTitleNA];
+            timer = clock() - timer;
+            cout << "It took an ordered map " << (float)timer/CLOCKS_PER_SEC << " seconds to access its last inputted key!";
+            //print how much time it takes to print the last item in the americas map
+        } else if (input == "2") {
+            cout << "The prosperity index of the Middle East is: " << idx1 << endl;
+            timer = clock();
+            test = prospCalcUnord.MidEast[lastTitleME];
+            timer = clock() - timer;
+            cout << "It took an unordered map " << (float)timer/CLOCKS_PER_SEC << " seconds to access its last inputted key!" << endl;
+            timer = clock();
+            test = prospCalcOrd.MidEast[lastTitleME];
+            timer = clock() - timer;
+            cout << "It took an ordered map " << (float)timer/CLOCKS_PER_SEC << " seconds to access its last inputted key!";
+
+        } else if (input == "3") {
+            cout << "The prosperity index of Asia is: " << idx2 << endl;
+            timer = clock();
+            test = prospCalcUnord.Asia[lastTitleAsia];
+            timer = clock() - timer;
+            cout << "It took an unordered map " << (float)timer/CLOCKS_PER_SEC << " seconds to access its last inputted key!" << endl;
+            timer = clock();
+            test = prospCalcOrd.Asia[lastTitleAsia];
+            timer = clock() - timer;
+            cout << "It took an ordered map " << (float)timer/CLOCKS_PER_SEC << " seconds to access its last inputted key!";
+        }
+        else if (input == "4")
+            findProsperity = false;
+        else{
+            cout << "Please enter valid input (1, 2, or 3)" << endl;
+        }
+        cout << endl;
+    }
+    cout << "END";
 
     return 0;
 }
